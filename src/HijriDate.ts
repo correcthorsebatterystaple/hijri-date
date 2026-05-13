@@ -67,15 +67,20 @@ export class HijriDate {
       typeof args[1] === "number" &&
       typeof args[2] === "number"
     ) {
-      this.year = args[0];
-      this.month = args[1];
-      this.date = args[2];
+      const [year, month, date] = HijriDate.normalise(
+        args[0],
+        args[1],
+        args[2],
+      );
+
+      this.year = year;
+      this.month = month;
+      this.date = date;
+      return this;
     }
 
     if (args.length === 1 && args[0] instanceof Date) {
-      const date = args[0];
-      const hijriDate = HijriDate.fromGregorian(date);
-      return new HijriDate(hijriDate.year, hijriDate.month, hijriDate.date);
+      return HijriDate.fromGregorian(args[0]);
     }
 
     if (args.length === 1 && args[0] instanceof HijriDate) {
@@ -87,6 +92,30 @@ export class HijriDate {
       const date = new Date();
       return HijriDate.fromGregorian(date);
     }
+  }
+
+  private static daysInMonth(year: number, month: number): number {
+    if (month === 11 && HijriDate.isLeapYear(year)) return 30;
+    return month % 2 === 0 ? 30 : 29;
+  }
+
+  private static normalise(
+    year: number,
+    month: number,
+    date: number,
+  ): [year: number, month: number, date: number] {
+    year += Math.floor(month / 12);
+    month %= 12;
+    let daysInMonth = HijriDate.daysInMonth(year, month);
+    while (date > daysInMonth) {
+      date -= daysInMonth;
+      month += 1;
+      year += Math.floor(month / 12);
+      month %= 12;
+      daysInMonth = HijriDate.daysInMonth(year, month);
+    }
+
+    return [year, month, date];
   }
 
   private static fromGregorian(date: Date): HijriDate {
@@ -144,6 +173,10 @@ export class HijriDate {
       ajd += CUMULATIVE_YEAR_DAYS[this.year - y30 * 30 - 1];
     }
     return ajd;
+  }
+
+  private static isLeapYear(year: number): boolean {
+    return KABISA_YEAR_REMAINDERS.includes(year % 30);
   }
 
   setDate(date: number): void {

@@ -15,6 +15,13 @@ describe("HijriDate constructors", () => {
     expect(date.getDate()).toBe(1);
   });
 
+  test("HijriDate initialization with overflowing date and month into next year", () => {
+    const date = new HijriDate(1442, 12, 31);
+    expect(date.getYear()).toBe(1443);
+    expect(date.getMonth()).toBe(1);
+    expect(date.getDate()).toBe(1);
+  });
+
   test("HijriDate initialization with Date object converts and returns corresponding hijri date", () => {
     const date = new Date("2026-05-13T00:00:00Z");
 
