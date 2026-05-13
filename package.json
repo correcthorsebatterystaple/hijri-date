@@ -1,0 +1,27 @@
+{
+  "name": "hijri-date",
+  "version": "1.0.0",
+  "description": "Date library for Hijri dates by the Fatemid Tabular Islamic Calendar",
+  "keywords": [
+    "hijri",
+    "date",
+    "bohra",
+    "mumin"
+  ],
+  "main": "./dist/index.js",
+  "module": "./dist/index.mjs",
+  "types": "./dist/index.d.ts",
+  "license": "MIT",
+  "author": "Burhanuddin Salim",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "@jest/globals": "^30.4.1",
+    "@types/jest": "^30.0.0",
+    "jest": "^30.4.2",
+    "ts-jest": "^29.4.9",
+    "tsup": "^8.5.1",
+    "typescript": "^6.0.3"
+  }
+}
