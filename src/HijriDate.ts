@@ -217,16 +217,30 @@ export class HijriDate {
     return HijriDate.isLeapYear(this.year);
   }
 
-  setDate(date: number): void {
-    throw new Error("Method not implemented.");
+  setDate(date_: number): void {
+    const [year, month, date] = HijriDate.normalise(
+      this.year,
+      this.month,
+      date_,
+    );
+    this.year = year;
+    this.month = month;
+    this.date = date;
   }
 
-  setMonth(month: number): void {
-    throw new Error("Method not implemented.");
+  setMonth(month_: number): void {
+    const [year, month, date] = HijriDate.normalise(
+      this.year,
+      month_,
+      this.date,
+    );
+    this.year = year;
+    this.month = month;
+    this.date = date;
   }
 
   setYear(year: number): void {
-    throw new Error("Method not implemented.");
+    this.year = year;
   }
 
   getDate(): number {

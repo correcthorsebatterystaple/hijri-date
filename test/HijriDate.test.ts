@@ -7,7 +7,7 @@ describe("HijriDate constructors", () => {
     jest.setSystemTime(new Date("2026-05-13T00:00:00Z"));
   });
 
-  test("HijriDate initialization with year, month, date returns the hijri date", () => {
+  test("initialization with year, month, date returns the hijri date", () => {
     const date = new HijriDate(1442, 9, 1);
 
     expect(date.getYear()).toBe(1442);
@@ -15,14 +15,22 @@ describe("HijriDate constructors", () => {
     expect(date.getDate()).toBe(1);
   });
 
-  test("HijriDate initialization with overflowing date and month into next year", () => {
+  test("initialization with overflowing date and month into next year", () => {
     const date = new HijriDate(1442, 12, 31);
     expect(date.getYear()).toBe(1443);
     expect(date.getMonth()).toBe(1);
     expect(date.getDate()).toBe(1);
   });
 
-  test("HijriDate initialization with Date object converts and returns corresponding hijri date", () => {
+  test("initialization with overflowing date into 2 months", () => {
+    const date = new HijriDate(1442, 9, 60);
+
+    expect(date.getYear()).toBe(1442);
+    expect(date.getMonth()).toBe(11);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("initialization with Date object", () => {
     const date = new Date("2026-05-13T00:00:00Z");
 
     const hijriDate = new HijriDate(date);
@@ -32,7 +40,7 @@ describe("HijriDate constructors", () => {
     expect(hijriDate.getDate()).toBe(27);
   });
 
-  test("HijriDate initialization with other HijriDate object clones the other object", () => {
+  test("initialization with other HijriDate object clones the other object", () => {
     const date1 = new HijriDate(1442, 9, 1);
     const date2 = new HijriDate(date1);
 
@@ -41,7 +49,7 @@ describe("HijriDate constructors", () => {
     expect(date2.getDate()).toBe(1);
   });
 
-  test("HijriDate initialization with no arguments returns current date", () => {
+  test("initialization with no arguments returns current date", () => {
     const date = new HijriDate();
 
     expect(date.getYear()).toBe(1447);
@@ -64,5 +72,43 @@ describe("HijriDate getters", () => {
   test("getDate returns the correct date", () => {
     const date = new HijriDate(1442, 9, 1);
     expect(date.getDate()).toBe(1);
+  });
+});
+
+describe("HijriDate setters", () => {
+  test("setYear updates the year correctly", () => {
+    const date = new HijriDate(1442, 9, 1);
+    date.setYear(1443);
+    expect(date.getYear()).toBe(1443);
+  });
+
+  test("setMonth updates the month correctly and normalizes date", () => {
+    const date = new HijriDate(1442, 8, 30);
+    date.setMonth(9);
+    expect(date.getMonth()).toBe(10);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("setDate updates the date correctly and normalizes month and year", () => {
+    const date = new HijriDate(1442, 8, 30);
+    date.setDate(31);
+    expect(date.getMonth()).toBe(9);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("setDate with large date normalizes month and year correctly", () => {
+    const date = new HijriDate(1442, 10, 30);
+    date.setDate(61);
+    expect(date.getYear()).toBe(1443);
+    expect(date.getMonth()).toBe(0);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("setMonth with large month normalizes year correctly", () => {
+    const date = new HijriDate(1442, 0, 30);
+    date.setMonth(24);
+    expect(date.getYear()).toBe(1444);
+    expect(date.getMonth()).toBe(0);
+    expect(date.getDate()).toBe(30);
   });
 });
