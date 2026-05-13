@@ -217,30 +217,54 @@ export class HijriDate {
     return HijriDate.isLeapYear(this.year);
   }
 
-  setDate(date_: number): void {
+  /**
+   * Sets the date of the current HijriDate instance, normalizing the month and year if necessary.
+   * If the provided date exceeds the number of days in the current month, it rolls over to the next month.
+   * @param date_ - The new date to set (1-30).
+   * @returns The current HijriDate instance with the updated date.
+   */
+  setDate(date_: number): HijriDate {
     const [year, month, date] = HijriDate.normalise(
       this.year,
       this.month,
       date_,
     );
+
     this.year = year;
     this.month = month;
     this.date = date;
+
+    return this;
   }
 
-  setMonth(month_: number): void {
+  /**
+   * Sets the month of the current HijriDate instance, normalizing the year if necessary.
+   * If the provided month exceeds 11, it rolls over to the next year.
+   * @param month_ - The new month to set (0-11).
+   * @returns The current HijriDate instance with the updated month.
+   */
+  setMonth(month_: number): HijriDate {
     const [year, month, date] = HijriDate.normalise(
       this.year,
       month_,
       this.date,
     );
+
     this.year = year;
     this.month = month;
     this.date = date;
+
+    return this;
   }
 
-  setYear(year: number): void {
+  /**
+   * Sets the year of the current HijriDate instance.
+   * @param year - The new year to set (1-9999).
+   * @returns The current HijriDate instance with the updated year.
+   */
+  setYear(year: number): HijriDate {
     this.year = year;
+    return this;
   }
 
   getDate(): number {
