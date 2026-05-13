@@ -49,6 +49,15 @@ describe("HijriDate constructors", () => {
     expect(date2.getDate()).toBe(1);
   });
 
+  test("initialization with HijriDate creates cloned object", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(date1);
+
+    date1.setYear(1443);
+
+    expect(date2.getYear()).toBe(1442);
+  });
+
   test("initialization with no arguments returns current date", () => {
     const date = new HijriDate();
 
