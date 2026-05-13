@@ -94,11 +94,26 @@ export class HijriDate {
     }
   }
 
+  /**
+   * Returns the number of days in a given month of a specific year in the Hijri calendar.
+   * @param year - The Hijri year.
+   * @param month - The Hijri month (0-11).
+   * @returns The number of days in the specified month and year.
+   */
   private static daysInMonth(year: number, month: number): number {
     if (month === 11 && HijriDate.isLeapYear(year)) return 30;
     return month % 2 === 0 ? 30 : 29;
   }
 
+  /**
+   * Normalizes the year, month, and date values to ensure they are within valid ranges.
+   * For example, if the month value exceeds 11, it rolls over to the next year.
+   * If the date value exceeds the number of days in the month, it rolls over to the next month.
+   * @param year - The Hijri year.
+   * @param month - The Hijri month (0-11).
+   * @param date - The Hijri date (1-30).
+   * @returns A tuple containing the normalized year, month, and date.
+   */
   private static normalise(
     year: number,
     month: number,
@@ -118,10 +133,20 @@ export class HijriDate {
     return [year, month, date];
   }
 
+  /**
+   * Creates a new HijriDate instance from a Gregorian Date object.
+   * @param date - The Gregorian Date object to convert to Hijri.
+   * @returns A new HijriDate instance representing the equivalent date in the Hijri calendar.
+   */
   private static fromGregorian(date: Date): HijriDate {
     return HijriDate.fromJulianDayNumber(dateToJulianDay(date));
   }
 
+  /**
+   * Creates a new HijriDate instance from an astronomical Julian Day Number (AJD).
+   * @param ajd - The astronomical Julian Day Number to convert to a Hijri date.
+   * @returns A new HijriDate instance representing the equivalent date in the Hijri calendar.
+   */
   private static fromJulianDayNumber(ajd: number): HijriDate {
     var year,
       month,
@@ -175,8 +200,21 @@ export class HijriDate {
     return ajd;
   }
 
+  /**
+   * Determines if a given year in the Hijri calendar is a leap year.
+   * @param year - The Hijri year to check.
+   * @returns True if the year is a leap year, false otherwise.
+   */
   private static isLeapYear(year: number): boolean {
     return KABISA_YEAR_REMAINDERS.includes(year % 30);
+  }
+
+  /**
+   * Determines if the year of the current HijriDate instance is a leap year.
+   * @returns True if the year is a leap year, false otherwise.
+   */
+  isLeapYear(): boolean {
+    return HijriDate.isLeapYear(this.year);
   }
 
   setDate(date: number): void {
