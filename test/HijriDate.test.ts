@@ -49,3 +49,20 @@ describe("HijriDate constructors", () => {
     expect(date.getDate()).toBe(27);
   });
 });
+
+describe("HijriDate getters", () => {
+  test("getYear returns the correct year", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getYear()).toBe(1442);
+  });
+
+  test("getMonth returns the correct month", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getMonth()).toBe(9);
+  });
+
+  test("getDate returns the correct date", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getDate()).toBe(1);
+  });
+});
