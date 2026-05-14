@@ -107,7 +107,7 @@ console.log(h.getDate()); // 30
 
 h.setDate(31); // overflow date by 1 in a 30-day month
 console.log(h.getYear()); // 1443
-console.log(h.getMonth()); // 1
+console.log(h.getMonth()); // 0
 console.log(h.getDate()); // 1
 ```
 
