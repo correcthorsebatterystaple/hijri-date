@@ -1,25 +1,25 @@
-# hijri-date
+# hijri-date-fatemi
 
 A lightweight no dependency JavaScript/TypeScript date library for the **Fatemid Islamic Tabular Calendar**.
 
 ## Installation
 
 ```bash
-npm install hijri-date
+npm install hijri-date-fatemi
 ```
 
 ```bash
-pnpm add hijri-date
+pnpm add hijri-date-fatemi
 ```
 
 ```bash
-yarn add hijri-date
+yarn add hijri-date-fatemi
 ```
 
 ## Usage
 
 ```ts
-import { HijriDate } from "hijri-date";
+import { HijriDate } from "hijri-date-fatemi";
 ```
 
 ### Create a Hijri date
@@ -28,9 +28,9 @@ import { HijriDate } from "hijri-date";
 // month is zero-based: 0 = Muharram, 11 = Dhu al-Hijjah
 const h = new HijriDate(1447, 10, 27);
 
-console.log(h.getYear());  // 1447
+console.log(h.getYear()); // 1447
 console.log(h.getMonth()); // 10
-console.log(h.getDate());  // 27
+console.log(h.getDate()); // 27
 ```
 
 ### Convert from Gregorian Date
@@ -39,9 +39,9 @@ console.log(h.getDate());  // 27
 const gregorian = new Date("2026-05-13T00:00:00Z");
 const hijri = new HijriDate(gregorian);
 
-console.log(hijri.getYear());  // 1447
+console.log(hijri.getYear()); // 1447
 console.log(hijri.getMonth()); // 10
-console.log(hijri.getDate());  // 27
+console.log(hijri.getDate()); // 27
 ```
 
 ### Convert to Gregorian Date
@@ -76,9 +76,9 @@ Values are normalized automatically (overflow/underflow rolls across months and 
 ```ts
 const h = new HijriDate(1442, 12, 31);
 
-console.log(h.getYear());  // 1443
+console.log(h.getYear()); // 1443
 console.log(h.getMonth()); // 1
-console.log(h.getDate());  // 1
+console.log(h.getDate()); // 1
 ```
 
 ## API

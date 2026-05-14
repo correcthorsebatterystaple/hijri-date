@@ -1,15 +1,15 @@
 {
-  "name": "hijri-date",
+  "name": "hijri-date-fatemi",
   "version": "1.0.0",
   "description": "Date library for Hijri dates by the Fatemid Tabular Islamic Calendar",
   "repository": {
     "type": "git",
-    "url": "https://github.com/correcthorsebatterystaple/hijri-date"
+    "url": "https://github.com/correcthorsebatterystaple/hijri-date-fatemi"
   },
   "bugs": {
-    "url": "https://github.com/correcthorsebatterystaple/hijri-date/issues"
+    "url": "https://github.com/correcthorsebatterystaple/hijri-date-fatemi/issues"
   },
-  "homepage": "https://github.com/correcthorsebatterystaple/hijri-date#readme",
+  "homepage": "https://github.com/correcthorsebatterystaple/hijri-date-fatemi#readme",
   "keywords": [
     "hijri",
     "date",
