@@ -1,6 +1,6 @@
 {
   "name": "hijri-date-fatemi",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "Date library for Hijri dates by the Fatemid Tabular Islamic Calendar",
   "repository": {
     "type": "git",
