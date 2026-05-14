@@ -412,8 +412,15 @@ export class HijriDate {
     return this.setYear(this.year - years);
   }
 
-  equals(other: HijriDate): boolean {
+  /**
+   * Determines if the current HijriDate instance is equal to another HijriDate instance.
+   * Two HijriDate instances are considered equal if they have the same year, month, and date.
+   * @param other - The other HijriDate instance to compare with.
+   * @returns True if the two HijriDate instances are equal, false otherwise.
+   */
+  equals(other: unknown): boolean {
     return (
+      other instanceof HijriDate &&
       this.year === other.year &&
       this.month === other.month &&
       this.date === other.date
