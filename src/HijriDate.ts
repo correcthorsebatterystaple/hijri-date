@@ -292,8 +292,17 @@ export class HijriDate {
    * @param year - The new year to set.
    * @returns The current HijriDate instance with the updated year.
    */
-  setYear(year: number): HijriDate {
+  setYear(year_: number): HijriDate {
+    const [year, month, date] = HijriDate.normalise(
+      year_,
+      this.month,
+      this.date,
+    );
+
     this.year = year;
+    this.month = month;
+    this.date = date;
+
     return this;
   }
 
@@ -401,5 +410,13 @@ export class HijriDate {
    */
   minusYears(years: number): HijriDate {
     return this.setYear(this.year - years);
+  }
+
+  equals(other: HijriDate): boolean {
+    return (
+      this.year === other.year &&
+      this.month === other.month &&
+      this.date === other.date
+    );
   }
 }
