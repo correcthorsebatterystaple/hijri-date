@@ -69,6 +69,30 @@ h.minusMonths(2);
 h.minusYears(1);
 ```
 
+### Compare Hijri dates with operators
+
+`HijriDate` supports numeric comparison operators (`<`, `>`, `<=`, `>=`) through primitive conversion:
+
+```ts
+const a = new HijriDate(1447, 10, 27);
+const b = new HijriDate(1447, 10, 28);
+
+console.log(a < b); // true
+console.log(a <= b); // true
+console.log(b > a); // true
+console.log(b >= a); // true
+```
+
+For equality, use `.equals()` to compare date values:
+
+```ts
+const x = new HijriDate(1447, 10, 27);
+const y = new HijriDate(1447, 10, 27);
+
+console.log(x.equals(y)); // true
+console.log(x === y); // false (different instances)
+```
+
 ### Mutating setters and normalization
 
 Values are normalized automatically (overflow/underflow rolls across months and years):
