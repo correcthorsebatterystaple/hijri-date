@@ -23,7 +23,8 @@
   "author": "Burhanuddin Salim",
   "scripts": {
     "test": "jest",
-    "build": "tsup"
+    "build": "tsup",
+    "prepublishOnly": "npm run test && npm run build"
   },
   "files": [
     "dist",
