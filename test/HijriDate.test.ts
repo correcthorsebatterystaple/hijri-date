@@ -121,3 +121,50 @@ describe("HijriDate setters", () => {
     expect(date.getDate()).toBe(30);
   });
 });
+
+describe("HijriDate getters", () => {
+  test("getYear returns the correct year", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getYear()).toBe(1442);
+  });
+
+  test("getMonth returns the correct month", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getMonth()).toBe(9);
+  });
+
+  test("getDate returns the correct date", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("getDay returns the correct day of the week", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getDay()).toBe(3);
+  });
+
+  test("getDay returns correct day of the week for leap day", () => {
+    const date = new HijriDate(1442, 11, 30);
+    expect(date.getDay()).toBe(0);
+  });
+});
+
+describe("HijriDate toGregorian", () => {
+  test("toGregorian converts Hijri date to correct Gregorian date", () => {
+    const date = new HijriDate(1442, 9, 1);
+    const gregorianDate = date.toGregorian();
+
+    expect(gregorianDate.getUTCFullYear()).toBe(2021);
+    expect(gregorianDate.getUTCMonth()).toBe(4);
+    expect(gregorianDate.getUTCDate()).toBe(12);
+  });
+
+  test("toGregorian converts leap day to correct Gregorian date", () => {
+    const date = new HijriDate(1442, 11, 30);
+    const gregorianDate = date.toGregorian();
+
+    expect(gregorianDate.getUTCFullYear()).toBe(2021);
+    expect(gregorianDate.getUTCMonth()).toBe(7);
+    expect(gregorianDate.getUTCDate()).toBe(8);
+  });
+});

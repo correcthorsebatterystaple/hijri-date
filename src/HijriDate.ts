@@ -21,9 +21,11 @@ const CUMULATIVE_YEAR_DAYS = [
 
 /**
  * The base epoch for the Hijri calendar, represented as an Astronomical Julian Day (AJD).
- * The AJD value of 1948083.5 corresponds to July 25, 621 CE in the Gregorian calendar.
+ * The AJD value of 1948083.5 corresponds to July 25, 621 CE at midnight in the Gregorian calendar.
  */
 const BASE_EPOCH_AJD = 1948083.5;
+
+const BASE_EPOCH_DAY = 3;
 
 /** Number of days in a 30 year cycle. */
 const DAYS_IN_CYCLE = 10631;
@@ -181,19 +183,22 @@ export class HijriDate {
    * Converts the HijriDate instance to a Gregorian Date object.
    */
   toGregorian(): Date {
-    return dateFromJulianDay(this.toJulianDayNumber());
+    const ajd = this.toJulianDayNumber();
+    return dateFromJulianDay(ajd);
+  }
+
+  private dayOfYear(): number {
+    if (this.month === 0) return this.date;
+    return CUMULATIVE_MONTH_DAYS[this.month - 1] + this.date;
   }
 
   /**
    * Converts the HijriDate instance to an astronomical Julian Day Number (AJD).
    */
   private toJulianDayNumber(): number {
-    let dayOfYear = CUMULATIVE_MONTH_DAYS[this.month] + this.date;
-    if (this.month === 0) dayOfYear = this.date;
-
     const y30 = Math.floor(this.year / YEARS_IN_CYCLE);
 
-    let ajd = BASE_EPOCH_AJD + y30 * DAYS_IN_CYCLE + dayOfYear;
+    let ajd = BASE_EPOCH_AJD + y30 * DAYS_IN_CYCLE + this.dayOfYear();
     if (this.year % 30 !== 0) {
       ajd += CUMULATIVE_YEAR_DAYS[this.year - y30 * 30 - 1];
     }
@@ -267,19 +272,37 @@ export class HijriDate {
     return this;
   }
 
+  /**
+   * Gets the date of the current HijriDate instance.
+   * @returns The date (day of the month) of the current Hijri date.
+   */
   getDate(): number {
     return this.date;
   }
 
+  /**
+   * Gets the month of the current HijriDate instance.
+   * @returns The month of the current Hijri date (0-11).
+   */
   getMonth(): number {
     return this.month;
   }
 
+  /**
+   * Gets the year of the current HijriDate instance.
+   * @returns The year of the current Hijri date.
+   */
   getYear(): number {
     return this.year;
   }
 
+  /**
+   * Calculates the day of the week for the current HijriDate instance.
+   * Ranges from 0 (Sunday) to 6 (Saturday).
+   * @returns The day of the week corresponding to the current Hijri date.
+   */
   getDay(): number {
-    throw new Error("Method not implemented.");
+    const ajd = this.toJulianDayNumber();
+    return Math.floor(ajd + 1.5) % 7;
   }
 }
