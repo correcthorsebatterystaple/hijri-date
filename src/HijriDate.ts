@@ -1,3 +1,4 @@
+import { clamp } from "./utils/clamp";
 import { dateFromJulianDay } from "./utils/dateFromJulianDay";
 import { dateToJulianDay } from "./utils/dateToJulianDay";
 import { isJulian } from "./utils/isJulian";
@@ -281,7 +282,7 @@ export class HijriDate {
 
   /**
    * Sets the year of the current HijriDate instance.
-   * @param year - The new year to set (1-9999).
+   * @param year - The new year to set.
    * @returns The current HijriDate instance with the updated year.
    */
   setYear(year: number): HijriDate {
@@ -321,5 +322,77 @@ export class HijriDate {
   getDay(): number {
     const ajd = this.toJulianDayNumber();
     return mod(Math.floor(ajd + 1.5), 7);
+  }
+
+  /**
+   * Adds a specified number of days to the current HijriDate instance
+   * @param days - The number of days to add.
+   * @returns The current HijriDate instance with the updated date.
+   */
+  addDays(days: number): HijriDate {
+    return this.setDate(this.date + days);
+  }
+
+  /**
+   * Adds a specified number of weeks to the current HijriDate instance
+   * @param weeks - The number of weeks to add.
+   * @returns The current HijriDate instance with the updated date.
+   */
+  addWeeks(weeks: number): HijriDate {
+    return this.setDate(this.date + weeks * 7);
+  }
+
+  /**
+   * Adds a specified number of months to the current HijriDate instance
+   * @param months - The number of months to add.
+   * @returns The current HijriDate instance with the updated date
+   */
+  addMonths(months: number): HijriDate {
+    return this.setMonth(this.month + months);
+  }
+
+  /**
+   * Adds a specified number of years to the current HijriDate instance
+   * @param years - The number of years to add.
+   * @returns The current HijriDate instance with the updated date
+   */
+  addYears(years: number): HijriDate {
+    return this.setYear(this.year + years);
+  }
+
+  /**
+   * Subtracts a specified number of days from the current HijriDate instance
+   * @param days - The number of days to subtract.
+   * @returns The current HijriDate instance with the updated date.
+   */
+  minusDays(days: number): HijriDate {
+    return this.setDate(this.date - days);
+  }
+
+  /**
+   * Subtracts a specified number of weeks from the current HijriDate instance
+   * @param weeks - The number of weeks to subtract.
+   * @returns The current HijriDate instance with the updated date.
+   */
+  minusWeeks(weeks: number): HijriDate {
+    return this.setDate(this.date - weeks * 7);
+  }
+
+  /**
+   * Subtracts a specified number of months from the current HijriDate instance
+   * @param months - The number of months to subtract.
+   * @returns The current HijriDate instance with the updated date
+   */
+  minusMonths(months: number): HijriDate {
+    return this.setMonth(this.month - months);
+  }
+
+  /**
+   * Subtracts a specified number of years from the current HijriDate instance
+   * @param years - The number of years to subtract.
+   * @returns The current HijriDate instance with the updated date
+   */
+  minusYears(years: number): HijriDate {
+    return this.setYear(this.year - years);
   }
 }
