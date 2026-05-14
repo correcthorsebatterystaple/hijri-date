@@ -14,8 +14,14 @@
   "license": "MIT",
   "author": "Burhanuddin Salim",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "tsup"
   },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE"
+  ],
   "devDependencies": {
     "@jest/globals": "^30.4.1",
     "@types/jest": "^30.0.0",
