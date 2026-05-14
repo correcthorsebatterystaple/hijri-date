@@ -1,6 +1,7 @@
 import { dateFromJulianDay } from "./utils/dateFromJulianDay";
 import { dateToJulianDay } from "./utils/dateToJulianDay";
 import { isJulian } from "./utils/isJulian";
+import { mod } from "./utils/mod";
 
 const KABISA_YEAR_REMAINDERS = [2, 5, 8, 10, 13, 16, 19, 21, 24, 27, 29];
 /**
@@ -104,7 +105,7 @@ export class HijriDate {
    */
   private static daysInMonth(year: number, month: number): number {
     if (month === 11 && HijriDate.isLeapYear(year)) return 30;
-    return month % 2 === 0 ? 30 : 29;
+    return mod(month, 2) === 0 ? 30 : 29;
   }
 
   /**
@@ -121,14 +122,30 @@ export class HijriDate {
     month: number,
     date: number,
   ): [year: number, month: number, date: number] {
-    year += Math.floor(month / 12);
-    month %= 12;
+    let absoluteMonth = year * 12 + month;
+
+    year = Math.floor(absoluteMonth / 12);
+    month = mod(absoluteMonth, 12);
+
+    while (date <= 0) {
+      absoluteMonth -= 1;
+
+      year = Math.floor(absoluteMonth / 12);
+      month = mod(absoluteMonth, 12);
+
+      date += HijriDate.daysInMonth(year, month);
+    }
+
     let daysInMonth = HijriDate.daysInMonth(year, month);
+
     while (date > daysInMonth) {
       date -= daysInMonth;
-      month += 1;
-      year += Math.floor(month / 12);
-      month %= 12;
+
+      absoluteMonth += 1;
+
+      year = Math.floor(absoluteMonth / 12);
+      month = mod(absoluteMonth, 12);
+
       daysInMonth = HijriDate.daysInMonth(year, month);
     }
 
@@ -199,7 +216,7 @@ export class HijriDate {
     const y30 = Math.floor(this.year / YEARS_IN_CYCLE);
 
     let ajd = BASE_EPOCH_AJD + y30 * DAYS_IN_CYCLE + this.dayOfYear();
-    if (this.year % 30 !== 0) {
+    if (mod(this.year, 30) !== 0) {
       ajd += CUMULATIVE_YEAR_DAYS[this.year - y30 * 30 - 1];
     }
     return ajd;
@@ -211,7 +228,7 @@ export class HijriDate {
    * @returns True if the year is a leap year, false otherwise.
    */
   private static isLeapYear(year: number): boolean {
-    return KABISA_YEAR_REMAINDERS.includes(year % 30);
+    return KABISA_YEAR_REMAINDERS.includes(mod(year, 30));
   }
 
   /**
@@ -303,6 +320,6 @@ export class HijriDate {
    */
   getDay(): number {
     const ajd = this.toJulianDayNumber();
-    return Math.floor(ajd + 1.5) % 7;
+    return mod(Math.floor(ajd + 1.5), 7);
   }
 }

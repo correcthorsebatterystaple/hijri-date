@@ -91,13 +91,6 @@ describe("HijriDate setters", () => {
     expect(date.getYear()).toBe(1443);
   });
 
-  test("setMonth updates the month correctly and normalizes date", () => {
-    const date = new HijriDate(1442, 8, 30);
-    date.setMonth(9);
-    expect(date.getMonth()).toBe(10);
-    expect(date.getDate()).toBe(1);
-  });
-
   test("setDate updates the date correctly and normalizes month and year", () => {
     const date = new HijriDate(1442, 8, 30);
     date.setDate(31);
@@ -113,12 +106,46 @@ describe("HijriDate setters", () => {
     expect(date.getDate()).toBe(1);
   });
 
+  test("setMonth updates the month correctly and normalizes date", () => {
+    const date = new HijriDate(1442, 8, 30);
+    date.setMonth(9);
+    expect(date.getMonth()).toBe(10);
+    expect(date.getDate()).toBe(1);
+  });
+
   test("setMonth with large month normalizes year correctly", () => {
     const date = new HijriDate(1442, 0, 30);
     date.setMonth(24);
     expect(date.getYear()).toBe(1444);
     expect(date.getMonth()).toBe(0);
     expect(date.getDate()).toBe(30);
+  });
+
+  test("setMonth with negative month normalizes year and month correctly", () => {
+    const date = new HijriDate(1442, 0, 1);
+    date.setMonth(-1);
+
+    expect(date.getYear()).toBe(1441);
+    expect(date.getMonth()).toBe(11);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("setMonth with negative month on leap year normalizes date correctly", () => {
+    const date = new HijriDate(1442, 0, 30);
+    date.setMonth(-1);
+
+    expect(date.getYear()).toBe(1442);
+    expect(date.getMonth()).toBe(0);
+    expect(date.getDate()).toBe(1);
+  });
+
+  test("setDate with negative date normalizes date, month, and year correctly", () => {
+    const date = new HijriDate(1442, 0, 1);
+    date.setDate(-1);
+
+    expect(date.getYear()).toBe(1441);
+    expect(date.getMonth()).toBe(11);
+    expect(date.getDate()).toBe(28);
   });
 });
 
