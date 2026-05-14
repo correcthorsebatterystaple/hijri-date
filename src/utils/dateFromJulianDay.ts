@@ -1,24 +1,40 @@
-export function dateFromJulianDay(ajd: number): Date {
-  const z = Math.floor(ajd + 0.5);
-  const f = ajd + 0.5 - z;
+import { utcDate } from "./utcDate";
 
-  let a = z;
-  if (z >= 2299161) {
-    const alpha = Math.floor((z - 1867216.25) / 36524.25);
-    a = z + 1 + alpha - Math.floor(0.25 * alpha);
-  }
+export function dateFromJulianDay(ajd: number): Date {
+  const shiftedJulianDay = ajd + 0.5;
+
+  const z = Math.floor(shiftedJulianDay);
+  const f = shiftedJulianDay - z;
+
+  // Always apply Gregorian correction for proleptic Gregorian calendar
+  const alpha = Math.floor((z - 1867216.25) / 36524.25);
+  const a = z + 1 + alpha - Math.floor(alpha / 4);
+
   const b = a + 1524;
   const c = Math.floor((b - 122.1) / 365.25);
   const d = Math.floor(365.25 * c);
   const e = Math.floor((b - d) / 30.6001);
 
-  const day = b - d - Math.floor(30.6001 * e) + f;
-  const hrs = (day - Math.floor(day)) * 24;
-  const min = (hrs - Math.floor(hrs)) * 60;
-  const sec = (min - Math.floor(min)) * 60;
-  const msc = (sec - Math.floor(sec)) * 1000;
+  const dayDecimal = b - d - Math.floor(30.6001 * e) + f;
+
+  const day = Math.floor(dayDecimal);
+  const dayFraction = dayDecimal - day;
+
+  const totalMilliseconds = Math.round(dayFraction * 86_400_000);
+
+  const hrs = Math.floor(totalMilliseconds / 3_600_000);
+  const min = Math.floor((totalMilliseconds % 3_600_000) / 60_000);
+  const sec = Math.floor((totalMilliseconds % 60_000) / 1_000);
+  const msc = totalMilliseconds % 1_000;
+
+  // JavaScript Date month is zero-based
   const month = e < 14 ? e - 2 : e - 14;
   const year = month < 2 ? c - 4715 : c - 4716;
 
-  return new Date(Date.UTC(year, month, day, hrs, min, sec, msc));
+  const result = new Date(Date.UTC(year, month, day, hrs, min, sec, msc));
+
+  // Fix JS Date.UTC behavior for years 0..99
+  result.setUTCFullYear(year);
+
+  return result;
 }

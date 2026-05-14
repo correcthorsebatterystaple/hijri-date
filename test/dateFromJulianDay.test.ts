@@ -11,4 +11,12 @@ describe("dateFromJulianDay", () => {
     expect(date.getUTCMonth()).toBe(4);
     expect(date.getUTCDate()).toBe(14);
   });
+
+  test("dateFromJulianDay preserves years 0 through 99 instead of applying Date.UTC's 1900 offset", () => {
+    const julianCalendarOneCe = dateFromJulianDay(1721425.5);
+
+    expect(julianCalendarOneCe.getUTCFullYear()).toBe(1);
+    expect(julianCalendarOneCe.getUTCMonth()).toBe(0);
+    expect(julianCalendarOneCe.getUTCDate()).toBe(1);
+  });
 });
