@@ -1,6 +1,7 @@
 import { clamp } from "./utils/clamp";
 import { dateFromJulianDay } from "./utils/dateFromJulianDay";
 import { dateToJulianDay } from "./utils/dateToJulianDay";
+import { findFirstIndexGreaterOrEqual } from "./utils/findFirstIndexGreaterOrEqual";
 import { isJulian } from "./utils/isJulian";
 import { mod } from "./utils/mod";
 
@@ -168,33 +169,39 @@ export class HijriDate {
    * @returns A new HijriDate instance representing the equivalent date in the Hijri calendar.
    */
   private static fromJulianDayNumber(ajd: number): HijriDate {
-    var year,
-      month,
-      date,
-      i = 0,
-      left = Math.floor(ajd - 1948083.5),
-      y30 = Math.floor(left / 10631.0);
+    let daysSinceEpoch = Math.floor(ajd - BASE_EPOCH_AJD);
 
-    left -= y30 * 10631;
-    while (left > CUMULATIVE_YEAR_DAYS[i]) {
-      i += 1;
-    }
+    const completedThirtyYearCycles = Math.floor(
+      daysSinceEpoch / DAYS_IN_CYCLE,
+    );
 
-    year = Math.round(y30 * 30.0 + i);
-    if (i > 0) {
-      left -= CUMULATIVE_YEAR_DAYS[i - 1];
-    }
-    i = 0;
-    while (left > CUMULATIVE_MONTH_DAYS[i]) {
-      i += 1;
-    }
-    month = Math.round(i);
-    date =
-      i > 0
-        ? Math.round(left - CUMULATIVE_MONTH_DAYS[i - 1])
-        : Math.round(left);
+    daysSinceEpoch -= completedThirtyYearCycles * DAYS_IN_CYCLE;
 
-    return new HijriDate(year, month, date);
+    const yearIndex = findFirstIndexGreaterOrEqual(
+      CUMULATIVE_YEAR_DAYS,
+      daysSinceEpoch,
+    );
+
+    const year = completedThirtyYearCycles * 30 + yearIndex;
+
+    const dayOfYear =
+      yearIndex > 0
+        ? daysSinceEpoch - CUMULATIVE_YEAR_DAYS[yearIndex - 1]
+        : daysSinceEpoch;
+
+    const monthIndex = findFirstIndexGreaterOrEqual(
+      CUMULATIVE_MONTH_DAYS,
+      dayOfYear,
+    );
+
+    const month = monthIndex;
+
+    const dayOfMonth =
+      monthIndex > 0
+        ? dayOfYear - CUMULATIVE_MONTH_DAYS[monthIndex - 1]
+        : dayOfYear;
+
+    return new HijriDate(year, month, dayOfMonth);
   }
 
   /**
