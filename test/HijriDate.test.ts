@@ -278,3 +278,72 @@ describe("HijriDate add and minus methods", () => {
     expect(october5.equals(october4)).toBeTruthy();
   });
 });
+
+describe("HijriDate equality", () => {
+  test("equals returns true for identical Hijri dates", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(1442, 9, 1);
+
+    expect(date1.equals(date2)).toBeTruthy();
+  });
+
+  test("equals returns false for different Hijri dates", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(1442, 9, 2);
+
+    expect(date1.equals(date2)).toBeFalsy();
+  });
+
+  test("equals returns false for non-HijriDate objects", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.equals({})).toBeFalsy();
+  });
+
+  test("equals returns false for null", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.equals(null)).toBeFalsy();
+  });
+
+  test("equals returns false for undefined", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.equals(undefined)).toBeFalsy();
+  });
+});
+
+describe("HijriDate toString", () => {
+  test("toString returns the correct string representation", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.toString()).toBe("1442-10-01");
+  });
+
+  test("toString returns correct string for leap day", () => {
+    const date = new HijriDate(1442, 11, 30);
+    expect(date.toString()).toBe("1442-12-30");
+  });
+});
+
+describe("HijriDate valueOf", () => {
+  test("valueOf returns the julian day number for the date", () => {
+    const date = new HijriDate(1442, 9, 1);
+    const julianDay = date.valueOf();
+
+    expect(julianDay).toBe(2459346.5);
+  });
+
+  test("primitive value of HijriDate is the julian day number", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(+date).toBe(2459346.5);
+  });
+});
+
+describe("HijriDate comparison", () => {
+  test("HijriDate objects can be compared using <, <=, >, >=", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(1442, 9, 2);
+
+    expect(date1 < date2).toBeTruthy();
+    expect(date1 <= date2).toBeTruthy();
+    expect(date2 > date1).toBeTruthy();
+    expect(date2 >= date1).toBeTruthy();
+  });
+});

@@ -426,4 +426,24 @@ export class HijriDate {
       this.date === other.date
     );
   }
+
+  toString(): string {
+    const dateStr = this.date.toString().padStart(2, "0");
+    const monthStr = (this.month + 1).toString().padStart(2, "0");
+    const yearStr = this.year.toString().padStart(4, "0");
+
+    return `${yearStr}-${monthStr}-${dateStr}`;
+  }
+
+  valueOf(): number {
+    return this.toJulianDayNumber();
+  }
+
+  [Symbol.toPrimitive](hint: string): number | string {
+    if (hint === "number") {
+      return this.valueOf();
+    }
+
+    return this.toString();
+  }
 }
