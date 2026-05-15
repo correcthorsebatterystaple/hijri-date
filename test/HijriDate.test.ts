@@ -306,6 +306,48 @@ describe("HijriDate add and minus methods", () => {
 
     expect(date.equals(roundTripped)).toBeTruthy();
   });
+
+  test("addWeeks adds exactly 7 days per week", () => {
+    const byWeeks = new HijriDate(1442, 9, 1).addWeeks(3);
+    const byDays = new HijriDate(1442, 9, 1).addDays(21);
+
+    expect(byWeeks.equals(byDays)).toBeTruthy();
+  });
+
+  test("minusDays subtracts days across month boundaries", () => {
+    const date = new HijriDate(1442, 9, 1).minusDays(2);
+
+    expect(date.equals(new HijriDate(1442, 8, 29))).toBeTruthy();
+  });
+
+  test("minusWeeks subtracts exactly 7 days per week", () => {
+    const byWeeks = new HijriDate(1442, 9, 20).minusWeeks(2);
+    const byDays = new HijriDate(1442, 9, 20).minusDays(14);
+
+    expect(byWeeks.equals(byDays)).toBeTruthy();
+  });
+
+  test("addMonths normalizes month and year", () => {
+    const date = new HijriDate(1442, 11, 15).addMonths(2);
+
+    expect(date.equals(new HijriDate(1443, 1, 15))).toBeTruthy();
+  });
+
+  test("minusMonths normalizes month and year", () => {
+    const date = new HijriDate(1442, 0, 15).minusMonths(2);
+
+    expect(date.equals(new HijriDate(1441, 10, 15))).toBeTruthy();
+  });
+});
+
+describe("HijriDate leap year", () => {
+  test("isLeapYear returns true for leap years", () => {
+    expect(new HijriDate(1442, 0, 1).isLeapYear()).toBeTruthy();
+  });
+
+  test("isLeapYear returns false for non-leap years", () => {
+    expect(new HijriDate(1441, 0, 1).isLeapYear()).toBeFalsy();
+  });
 });
 
 describe("HijriDate equality", () => {
