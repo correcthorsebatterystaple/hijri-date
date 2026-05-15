@@ -74,22 +74,14 @@ describe("HijriDate constructors", () => {
     expect(date.getMonth()).toBe(10);
     expect(date.getDate()).toBe(27);
   });
-});
 
-describe("HijriDate getters", () => {
-  test("getYear returns the correct year", () => {
-    const date = new HijriDate(1442, 9, 1);
-    expect(date.getYear()).toBe(1442);
-  });
-
-  test("getMonth returns the correct month", () => {
-    const date = new HijriDate(1442, 9, 1);
-    expect(date.getMonth()).toBe(9);
-  });
-
-  test("getDate returns the correct date", () => {
-    const date = new HijriDate(1442, 9, 1);
-    expect(date.getDate()).toBe(1);
+  test("initialization with invalid arguments throws an error", () => {
+    expect(() => new HijriDate(1442 as any)).toThrow();
+    expect(() => new HijriDate("invalid" as any)).toThrow();
+    expect(() => new HijriDate({} as any)).toThrow();
+    expect(() => new HijriDate(null as any)).toThrow();
+    expect(() => new HijriDate(undefined as any)).toThrow();
+    expect(() => new HijriDate("1442" as any, -1, 1)).toThrow();
   });
 });
 
@@ -159,33 +151,18 @@ describe("HijriDate setters", () => {
 
   test("setYear normalizes a leap day when the target year is not a leap year", () => {
     const date = new HijriDate(1442, 11, 30);
-
     date.setYear(1443);
 
     expect(date.equals(new HijriDate(1443, 11, 30))).toBeTruthy();
   });
 
-  test("addYears normalizes a leap day when the target year is not a leap year", () => {
-    const date = new HijriDate(1442, 11, 30);
+  test("large negative setDate normalizes date, month, and year correctly", () => {
+    const date = new HijriDate(1442, 0, 1);
+    date.setDate(-400);
 
-    date.addYears(1);
+    const expected = new HijriDate(1440, 10, 13);
 
-    expect(date.equals(new HijriDate(1443, 11, 30))).toBeTruthy();
-  });
-
-  test("minusYears normalizes a leap day when the target year is not a leap year", () => {
-    const date = new HijriDate(1445, 11, 30);
-
-    date.minusYears(1);
-
-    expect(date.equals(new HijriDate(1444, 11, 30))).toBeTruthy();
-  });
-
-  test("year-changing operations do not leave dates that disagree with their Gregorian round-trip", () => {
-    const date = new HijriDate(1442, 11, 30).addYears(1);
-    const roundTripped = new HijriDate(date.toGregorian());
-
-    expect(date.equals(roundTripped)).toBeTruthy();
+    expect(date.equals(expected)).toBeTruthy();
   });
 });
 
@@ -225,6 +202,21 @@ describe("HijriDate getters", () => {
     for (const hijri of dates) {
       expect(hijri.getDay()).toBe(hijri.toGregorian().getUTCDay());
     }
+  });
+
+  test("getYear returns the correct year", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getYear()).toBe(1442);
+  });
+
+  test("getMonth returns the correct month", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getMonth()).toBe(9);
+  });
+
+  test("getDate returns the correct date", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.getDate()).toBe(1);
   });
 });
 
@@ -266,6 +258,20 @@ describe("HijriDate toGregorian", () => {
 
     expect(daysBetween).toBe(1);
   });
+
+  test("round-tripping a date through toGregorian and the constructor results in the same date", () => {
+    const original = new HijriDate(1442, 11, 30);
+    const roundTripped = new HijriDate(original.toGregorian());
+
+    expect(original.equals(roundTripped)).toBeTruthy();
+  });
+
+  test("round tripping dates through toGregorian and fromGregorian results in the same date", () => {
+    const original = new HijriDate(1442, 11, 30);
+    const roundTripped = new HijriDate(original.toGregorian());
+
+    expect(original.equals(roundTripped)).toBeTruthy();
+  });
 });
 
 describe("HijriDate add and minus methods", () => {
@@ -276,6 +282,29 @@ describe("HijriDate add and minus methods", () => {
     october4.addDays(1);
 
     expect(october5.equals(october4)).toBeTruthy();
+  });
+
+  test("addYears normalizes a leap day when the target year is not a leap year", () => {
+    const date = new HijriDate(1442, 11, 30);
+
+    date.addYears(1);
+
+    expect(date.equals(new HijriDate(1443, 11, 30))).toBeTruthy();
+  });
+
+  test("minusYears normalizes a leap day when the target year is not a leap year", () => {
+    const date = new HijriDate(1445, 11, 30);
+
+    date.minusYears(1);
+
+    expect(date.equals(new HijriDate(1444, 11, 30))).toBeTruthy();
+  });
+
+  test("year-changing operations do not leave dates that disagree with their Gregorian round-trip", () => {
+    const date = new HijriDate(1442, 11, 30).addYears(1);
+    const roundTripped = new HijriDate(date.toGregorian());
+
+    expect(date.equals(roundTripped)).toBeTruthy();
   });
 });
 
@@ -320,6 +349,16 @@ describe("HijriDate toString", () => {
     const date = new HijriDate(1442, 11, 30);
     expect(date.toString()).toBe("1442-12-30");
   });
+
+  test("string interpolation calls toString", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(`${date}`).toBe("1442-10-01");
+  });
+
+  test("string construction calls toString", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(String(date)).toBe("1442-10-01");
+  });
 });
 
 describe("HijriDate valueOf", () => {
@@ -363,4 +402,65 @@ describe("HijriDate boundaries", () => {
     expect(start.equals(new HijriDate(1442, 9, 1))).toBeTruthy();
     expect(end.equals(new HijriDate(1442, 9, 29))).toBeTruthy();
   });
+});
+
+describe("HijriDate diff", () => {
+  test("diff returns the correct difference in days between two dates", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(1442, 9, 10);
+    expect(date1.diff(date2)).toBe(-9);
+    expect(date2.diff(date1)).toBe(9);
+  });
+
+  test("diff returns 0 for the same date", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = new HijriDate(1442, 9, 1);
+
+    expect(date1.diff(date2)).toBe(0);
+    expect(date2.diff(date1)).toBe(0);
+  });
+});
+
+describe("HijriDate daysInMonth", () => {
+  test.each([
+    [0, 30],
+    [1, 29],
+    [2, 30],
+    [3, 29],
+    [4, 30],
+    [5, 29],
+    [6, 30],
+    [7, 29],
+    [8, 30],
+    [9, 29],
+    [10, 30],
+    [11, 29],
+  ])(
+    "daysInMonth returns the correct number of days for month %i in non-leap year",
+    (month, daysExpected) => {
+      const date = new HijriDate(1441, month, 1);
+      expect(date.daysInMonth()).toBe(daysExpected);
+    },
+  );
+
+  test.each([
+    [0, 30],
+    [1, 29],
+    [2, 30],
+    [3, 29],
+    [4, 30],
+    [5, 29],
+    [6, 30],
+    [7, 29],
+    [8, 30],
+    [9, 29],
+    [10, 30],
+    [11, 30],
+  ])(
+    "daysInMonth returns the correct number of days for month %i in leap year",
+    (month, daysExpected) => {
+      const date = new HijriDate(1442, month, 1);
+      expect(date.daysInMonth()).toBe(daysExpected);
+    },
+  );
 });

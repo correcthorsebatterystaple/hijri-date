@@ -97,6 +97,8 @@ export class HijriDate {
       const date = new Date();
       return HijriDate.fromGregorian(date);
     }
+
+    throw new Error("Invalid constructor arguments");
   }
 
   /**
@@ -487,5 +489,14 @@ export class HijriDate {
     const end = new HijriDate(this.year, this.month, this.daysInMonth());
 
     return [start, end];
+  }
+
+  /**
+   * Calculates the difference in days between the current HijriDate instance and another HijriDate instance.
+   * @param other - The other HijriDate instance to compare with.
+   * @returns The number of days between the two HijriDate instances. A positive value indicates that the current instance is later than the other instance, while a negative value indicates that it is earlier.
+   */
+  diff(other: HijriDate): number {
+    return this.valueOf() - other.valueOf();
   }
 }
