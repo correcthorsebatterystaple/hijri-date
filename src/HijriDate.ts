@@ -499,4 +499,13 @@ export class HijriDate {
   diff(other: HijriDate): number {
     return this.valueOf() - other.valueOf();
   }
+
+  /**
+   * Creates a new HijriDate instance that is a copy of the current instance.
+   * This is useful for creating a new date object that can be modified without affecting the original instance.
+   * @returns A new HijriDate instance with the same year, month, and date as the current instance.
+   */
+  clone(): HijriDate {
+    return new HijriDate(this);
+  }
 }

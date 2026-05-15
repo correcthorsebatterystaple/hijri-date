@@ -464,3 +464,13 @@ describe("HijriDate daysInMonth", () => {
     },
   );
 });
+
+describe("HijriDate clone", () => {
+  test("clone returns a new HijriDate object with the same date", () => {
+    const date1 = new HijriDate(1442, 9, 1);
+    const date2 = date1.clone();
+
+    expect(date2.equals(date1)).toBeTruthy();
+    expect(date2).not.toBe(date1);
+  });
+});
