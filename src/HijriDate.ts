@@ -427,6 +427,9 @@ export class HijriDate {
     );
   }
 
+  /**
+   * Returns a string representation of the current HijriDate instance in the format "YYYY-MM-DD".
+   */
   toString(): string {
     const dateStr = this.date.toString().padStart(2, "0");
     const monthStr = (this.month + 1).toString().padStart(2, "0");
@@ -435,15 +438,54 @@ export class HijriDate {
     return `${yearStr}-${monthStr}-${dateStr}`;
   }
 
+  /**
+   * Returns the astronomical Julian Day Number (AJD) representation of the current HijriDate instance.
+   * This allows for easy comparison and arithmetic operations with other date representations.
+   */
   valueOf(): number {
     return this.toJulianDayNumber();
   }
 
+  /**
+   * Defines how the HijriDate instance should be converted to a primitive value (number or string) based on the context in which it is used.
+   */
   [Symbol.toPrimitive](hint: string): number | string {
     if (hint === "number") {
       return this.valueOf();
     }
 
     return this.toString();
+  }
+
+  /**
+   * Returns the number of  days in the month of the current HijriDate instance.
+   * This is useful for validating date inputs and performing date calculations that depend on the length of the month.
+   * @returns The number of days in the month of the current HijriDate instance.
+   */
+  daysInMonth(): number {
+    return HijriDate.daysInMonth(this.year, this.month);
+  }
+
+  /**
+   * Returns the start and end dates of the week for the current HijriDate instance.
+   * @returns A tuple containing the start and end dates of the week, where the start date is the Sunday of that week and the end date is the Saturday of that week.
+   */
+  getWeekBoundaries(): [start: HijriDate, end: HijriDate] {
+    const dayOfWeek = this.getDay();
+    const start = new HijriDate(this).minusDays(dayOfWeek);
+    const end = new HijriDate(this).addDays(6 - dayOfWeek);
+
+    return [start, end];
+  }
+
+  /**
+   * Returns the start and end dates of the month for the current HijriDate instance.
+   * @returns A tuple containing the start and end dates of the month, where the start date is the first day of the month and the end date is the last day of the month.
+   */
+  getMonthBoundaries(): [start: HijriDate, end: HijriDate] {
+    const start = new HijriDate(this.year, this.month, 1);
+    const end = new HijriDate(this.year, this.month, this.daysInMonth());
+
+    return [start, end];
   }
 }

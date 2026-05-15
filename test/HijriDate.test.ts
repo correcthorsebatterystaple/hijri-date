@@ -347,3 +347,20 @@ describe("HijriDate comparison", () => {
     expect(date2 >= date1).toBeTruthy();
   });
 });
+
+describe("HijriDate boundaries", () => {
+  test("getWeekBoundaries returns the correct start and end of the week", () => {
+    const date = new HijriDate(1442, 9, 1);
+    const [start, end] = date.getWeekBoundaries();
+    expect(start.equals(new HijriDate(1442, 8, 28))).toBeTruthy();
+    expect(end.equals(new HijriDate(1442, 9, 4))).toBeTruthy();
+  });
+
+  test("getMonthBoundaries returns the correct start and end of the month", () => {
+    const date = new HijriDate(1442, 9, 1);
+    const [start, end] = date.getMonthBoundaries();
+
+    expect(start.equals(new HijriDate(1442, 9, 1))).toBeTruthy();
+    expect(end.equals(new HijriDate(1442, 9, 29))).toBeTruthy();
+  });
+});
