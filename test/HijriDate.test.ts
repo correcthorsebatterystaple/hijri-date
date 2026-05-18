@@ -561,7 +561,7 @@ describe("HijriDate format", () => {
     [6, "Sat", "Saturday"],
   ])("format returns correct short weekday", (day, value, longValue) => {
     const date = new HijriDate(1447, 11, 1 + day);
-    expect(date.format("d")).toBe(value);
-    expect(date.format("dd")).toBe(longValue);
+    expect(date.format("ddd")).toBe(value);
+    expect(date.format("dddd")).toBe(longValue);
   });
 });

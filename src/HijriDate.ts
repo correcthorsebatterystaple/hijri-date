@@ -290,8 +290,10 @@ export class HijriDate {
         5: HijriDate.LONG_MONTH_NAMES[date.month],
       },
       day: {
-        1: HijriDate.SHORT_DAY_NAMES[date.getDay()],
-        2: HijriDate.DAY_NAMES[date.getDay()],
+        1: date.date.toString(),
+        2: date.date.toString().padStart(2, "0"),
+        3: HijriDate.SHORT_DAY_NAMES[date.getDay()],
+        4: HijriDate.DAY_NAMES[date.getDay()],
       },
     };
 
