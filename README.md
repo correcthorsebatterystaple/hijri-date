@@ -1,4 +1,4 @@
-# hijri-date-fatemi
+# Hijri Date Library (Fatemi)
 
 A lightweight no dependency JavaScript/TypeScript date library for the **Fatemid Islamic Tabular Calendar**.
 
