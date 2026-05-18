@@ -516,3 +516,52 @@ describe("HijriDate clone", () => {
     expect(date2).not.toBe(date1);
   });
 });
+
+describe("HijriDate format", () => {
+  test.each([
+    ["y", "907"],
+    ["yy", "07"],
+    ["yyyy", "0907"],
+  ])("format returns correct string for year formats (%s)", (format, value) => {
+    const date = new HijriDate(907, 0, 1);
+    expect(date.format(format)).toBe(value);
+  });
+
+  test.each([
+    [0, "1", "01", "Moh", "Moharram"],
+    [1, "2", "02", "Saf", "Safar"],
+    [2, "3", "03", "Rab-I", "Rabi I"],
+    [3, "4", "04", "Rab-II", "Rabi II"],
+    [4, "5", "05", "Jum-I", "Jumada I"],
+    [5, "6", "06", "Jum-II", "Jumada II"],
+    [6, "7", "07", "Raj", "Rajab"],
+    [7, "8", "08", "Shab", "Shaban"],
+    [8, "9", "09", "Ram", "Ramadan"],
+    [9, "10", "10", "Shaw", "Shawwal"],
+    [10, "11", "11", "Zil-Q", "Zil Qaad"],
+    [11, "12", "12", "Zil-H", "Zil Haj"],
+  ])(
+    "format returns correct short month for month %i",
+    (month, m, mm, mmm, mmmm) => {
+      const date = new HijriDate(1442, month, 1);
+      expect(date.format("m")).toBe(m);
+      expect(date.format("mm")).toBe(mm);
+      expect(date.format("mmm")).toBe(mmm);
+      expect(date.format("mmmm")).toBe(mmmm);
+    },
+  );
+
+  test.each([
+    [0, "Sun", "Sunday"],
+    [1, "Mon", "Monday"],
+    [2, "Tue", "Tuesday"],
+    [3, "Wed", "Wednesday"],
+    [4, "Thu", "Thursday"],
+    [5, "Fri", "Friday"],
+    [6, "Sat", "Saturday"],
+  ])("format returns correct short weekday", (day, value, longValue) => {
+    const date = new HijriDate(1447, 11, 1 + day);
+    expect(date.format("d")).toBe(value);
+    expect(date.format("dd")).toBe(longValue);
+  });
+});

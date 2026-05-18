@@ -1,9 +1,8 @@
-import { clamp } from "./utils/clamp";
 import { dateFromJulianDay } from "./utils/dateFromJulianDay";
 import { dateToJulianDay } from "./utils/dateToJulianDay";
 import { findFirstIndexGreaterOrEqual } from "./utils/findFirstIndexGreaterOrEqual";
-import { isJulian } from "./utils/isJulian";
 import { mod } from "./utils/mod";
+import { tokenizeFormatStr } from "./utils/tokenizeFormatStr";
 
 const KABISA_YEAR_REMAINDERS = [2, 5, 8, 10, 13, 16, 19, 21, 24, 27, 29];
 /**
@@ -204,6 +203,119 @@ export class HijriDate {
         : dayOfYear;
 
     return new HijriDate(year, month, dayOfMonth);
+  }
+
+  static SHORT_MONTH_NAMES = [
+    "Moh",
+    "Saf",
+    "Rab-I",
+    "Rab-II",
+    "Jum-I",
+    "Jum-II",
+    "Raj",
+    "Shab",
+    "Ram",
+    "Shaw",
+    "Zil-Q",
+    "Zil-H",
+  ];
+
+  static MONTH_NAMES = [
+    "Moharram",
+    "Safar",
+    "Rabi I",
+    "Rabi II",
+    "Jumada I",
+    "Jumada II",
+    "Rajab",
+    "Shaban",
+    "Ramadan",
+    "Shawwal",
+    "Zil Qaad",
+    "Zil Haj",
+  ];
+
+  static LONG_MONTH_NAMES = [
+    "Shehre Moharram Al Haram",
+    "Safar Al Muzaffar",
+    "Rabi Al Awwal",
+    "Rabi Al Aakhar",
+    "Jumada Al Ula",
+    "Jumada Al Ukhra",
+    "Shere Rajab Al Asab",
+    "Shaban Al Karim",
+    "Shehre Ramadan Al Moazzam",
+    "Shawwal Al Mukarram",
+    "Zil Qa'dat Al Haraam",
+    "Zil Hijjat Al Haraam",
+  ];
+
+  static SHORT_DAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  static DAY_NAMES = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+
+  /**
+   * Formats a HijriDate instance into a string based on the provided format string.
+   * The format string can contain the following tokens:
+   * - "y": Year (1-4 digits)
+   * - "m": Month (1-4 digits or month names)
+   * - "d": Day (1-4 digits or day names)
+   * - Any other characters in the format string are treated as literals and included in the output as-is.
+   * For example, the format string "yyyy-mm-dd" would produce a date string in the format "1447-01-01", while the format string "dd mmm yyyy" would produce a date string like "01 Moh 2024".
+   * @param formatStr - The format string specifying how to format the date.
+   * @param date - The HijriDate instance to format.
+   * @returns A string representation of the HijriDate instance formatted according to the provided format string.
+   */
+  static format(formatStr: string, date: HijriDate): string {
+    const tokens = tokenizeFormatStr(formatStr);
+
+    const parts: { [key: string]: { [length: number]: string } } = {
+      year: {
+        1: date.year.toString(),
+        2: (date.year % 100).toString().padStart(2, "0"),
+        4: date.year.toString().padStart(4, "0"),
+      },
+      month: {
+        1: (date.month + 1).toString(),
+        2: (date.month + 1).toString().padStart(2, "0"),
+        3: HijriDate.SHORT_MONTH_NAMES[date.month],
+        4: HijriDate.MONTH_NAMES[date.month],
+        5: HijriDate.LONG_MONTH_NAMES[date.month],
+      },
+      day: {
+        1: HijriDate.SHORT_DAY_NAMES[date.getDay()],
+        2: HijriDate.DAY_NAMES[date.getDay()],
+      },
+    };
+
+    const dateStr = tokens
+      .map((token) => {
+        switch (token.type) {
+          case "literal":
+            return token.value;
+          case "year":
+            return parts.year[token.length];
+          case "month":
+            return parts[token.type][token.length];
+          case "day":
+            return parts[token.type][token.length];
+        }
+      })
+      .filter((part): part is string => typeof part === "string")
+      .join("");
+
+    return dateStr;
+  }
+
+  format(formatStr: string): string {
+    return HijriDate.format(formatStr, this);
   }
 
   /**
