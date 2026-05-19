@@ -564,4 +564,9 @@ describe("HijriDate format", () => {
     expect(date.format("ddd")).toBe(value);
     expect(date.format("dddd")).toBe(longValue);
   });
+
+  test("format returns correct literal characters", () => {
+    const date = new HijriDate(1442, 9, 1);
+    expect(date.format("yyyy/mm/dd")).toBe("1442/10/01");
+  });
 });

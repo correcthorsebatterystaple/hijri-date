@@ -17,6 +17,7 @@ export function tokenizeFormatStr(formatStr: string): FormatToken[] {
 
     if (!isFormatChar(char)) {
       tokens.push({ type: "literal", value: char });
+      i++;
       continue;
     }
 
